@@ -10,7 +10,7 @@ import kotlin.random.Random
 fun initSteamSystem(): SteamSystem {
     val random = Random(100)
 
-    val games = getAllGamesData(random)
+    val games = getAllGamesData(random).sortedByDescending { it.releaseDate }
 
     val steam = SteamSystem(
         games,

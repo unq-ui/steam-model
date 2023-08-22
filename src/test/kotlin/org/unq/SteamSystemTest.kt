@@ -275,8 +275,8 @@ class SteamSystemTest {
         val steamSystem = system
         val games = steamSystem.getRecommendedGames()
         assertEquals(games.size, 10)
-        assertEquals(games[0].name, "Portal 2")
-        assertEquals(games[9].name, "Half-Life 2: Deathmatch")
+        assertEquals(games[0].name, "Red Dead Redemption 2")
+        assertEquals(games[9].name, "Super Meat Boy")
     }
 
     @Test

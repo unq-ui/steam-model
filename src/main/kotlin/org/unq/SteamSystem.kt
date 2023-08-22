@@ -100,7 +100,7 @@ class SteamSystem(
         val game = getGame(draftReview.gameId)
         if (!user.games.contains(game)) throw ReviewException("You need to own the game to leave a review")
         game.reviews.find { it.user == user }?.let { throw  ReviewException("You've already submitted a review for this game") }
-        game.reviews.add(Review(idGenerator.nextReviewId(), user, draftReview.isRecommended, draftReview.text))
+        game.reviews.add(Review(idGenerator.nextReviewId(), user, game, draftReview.isRecommended, draftReview.text))
         return game
     }
 
