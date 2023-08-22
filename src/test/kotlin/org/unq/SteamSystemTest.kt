@@ -292,7 +292,7 @@ class SteamSystemTest {
     @Test
     fun getGamesWithPage0Test() {
         val steamSystem = system
-        assertFailsWith<Exception>("Page most be 1 or more") {
+        assertFailsWith<PageException>("Page most be 1 or more") {
             steamSystem.getGames(0)
         }
     }
@@ -320,7 +320,7 @@ class SteamSystemTest {
     @Test
     fun getGamesByTagWithPage0Test() {
         val steamSystem = system
-        assertFailsWith<Exception>("Page most be 1 or more") {
+        assertFailsWith<PageException>("Page most be 1 or more") {
             steamSystem.getGamesByTag("t_0", 0)
         }
     }
@@ -356,7 +356,7 @@ class SteamSystemTest {
     @Test
     fun getGamesByDeveloperWithPage0Test() {
         val steamSystem = system
-        assertFailsWith<Exception>("Page most be 1 or more") {
+        assertFailsWith<PageException>("Page most be 1 or more") {
             steamSystem.getGamesByDeveloper("d_0", 0)
         }
     }
