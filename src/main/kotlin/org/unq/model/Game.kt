@@ -20,5 +20,10 @@ class Game(
 )
 
 enum class ESRB {
-    everyone, everyone10plus, teen, mature17plus, adultsOnly, ratingPending
+    everyone,
+    everyone10plus,
+    teen,
+    mature17plus,
+    adultsOnly,
+    ratingPending
 }

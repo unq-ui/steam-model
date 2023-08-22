@@ -13,3 +13,5 @@ class ReviewException(msg: String): Exception(msg)
 class UserException(msg: String): Exception(msg)
 
 class PurchaseException(msg: String): Exception(msg)
+
+class PageException(msg: String): Exception(msg)

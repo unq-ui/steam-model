@@ -1,34 +1,20 @@
-package org.unq
+# Steam
 
-import org.unq.model.*
+## How to use
 
-/**
- * Get a paginated list of elements.
- *
- * @param list The list of elements.
- * @param page The page number.
- * @return A pagination object for the elements.
- * @throws PageException If the page number is less than 1.
- */
-fun <E> getPage(list: List<E>, page: Int): PageInfo<E> {
-    if (page < 1) throw PageException("Page most be 1 or more")
-    val chunkedList = list.chunked(10)
-    return PageInfo(
-        currentPage = page,
-        list = chunkedList.getOrElse(page - 1) { listOf() },
-        amountOfElements = list.size,
-        amountOfPages = chunkedList.size,
-    )
-}
+```kotlin
+val steamSystem = initSteamSystem()
+```
 
+## SteamSystem
+
+```kotlin
 class SteamSystem(
     val games: List<Game>,
     val developers: List<Developer>,
     val tags: List<Tag>,
     val users: MutableList<User>,
 ) {
-
-    private val idGenerator = IdGenerator()
 
     /**
      * Add a new user to the system.
@@ -37,23 +23,7 @@ class SteamSystem(
      * @return The newly created user.
      * @throws UserException If the email address is already in use.
      */
-    fun addNewUser(user: DraftUser): User {
-        users.forEach {
-            if (it.email == user.email) throw UserException("Email is token")
-        }
-        val newUser = User(
-            idGenerator.nextUserId(),
-            user.email,
-            user.password,
-            user.name,
-            user.image,
-            user.backgroundImage,
-            mutableListOf(),
-            mutableListOf(),
-        )
-        users.add(newUser)
-        return newUser
-    }
+    fun addNewUser(user: DraftUser): User
 
     /**
      * Get a tag by its ID.
@@ -62,9 +32,7 @@ class SteamSystem(
      * @return The tag with the given ID.
      * @throws NotFoundTag If the tag with the given ID does not exist.
      */
-    fun getTag(id: String): Tag {
-        return tags.find { it.id == id } ?: throw NotFoundTag()
-    }
+    fun getTag(id: String): Tag
 
     /**
      * Get a user by its ID.
@@ -73,9 +41,7 @@ class SteamSystem(
      * @return The user with the given ID.
      * @throws NotFoundUser If the user with the given ID does not exist.
      */
-    fun getUser(id: String): User {
-        return users.find { it.id == id } ?: throw NotFoundUser()
-    }
+    fun getUser(id: String): User
 
     /**
      * Get a game by its ID.
@@ -84,9 +50,7 @@ class SteamSystem(
      * @return The game with the given ID.
      * @throws NotFoundGame If the game with the given ID does not exist.
      */
-    fun getGame(id: String): Game {
-        return games.find { it.id == id } ?: throw NotFoundGame()
-    }
+    fun getGame(id: String): Game
 
     /**
      * Get a developer by its ID.
@@ -95,9 +59,7 @@ class SteamSystem(
      * @return The developer with the given ID.
      * @throws NotFoundDeveloper If the developer with the given ID does not exist.
      */
-    fun getDeveloper(id: String): Developer {
-        return developers.find { it.id == id } ?: throw NotFoundDeveloper()
-    }
+    fun getDeveloper(id: String): Developer
 
     /**
      * Get the reviews written by the user with the given ID.
@@ -106,12 +68,7 @@ class SteamSystem(
      * @return The list of reviews written by the user.
      * @throws NotFoundUser If the user with the given ID does not exist.
      */
-    fun getUserReviews(userId: String): List<Review> {
-        val user = getUser(userId)
-        return games
-            .flatMap { game -> game.reviews }
-            .filter { it.user === user }
-    }
+    fun getUserReviews(userId: String): List<Review>
 
     /**
      * Get a list of recommended games.
@@ -120,11 +77,7 @@ class SteamSystem(
      *
      * @return A list of recommended games.
      */
-    fun getRecommendedGames(): List<Game> {
-        return games
-            .sortedByDescending { game -> game.reviews.count { review -> review.isRecommended } }
-            .take(10)
-    }
+    fun getRecommendedGames(): List<Game>
 
     /**
      * Get a list of games.
@@ -133,9 +86,7 @@ class SteamSystem(
      * @return A list of games.
      * @throws PageException If the page number is less than 1.
      */
-    fun getGames(page: Int = 1): PageInfo<Game> {
-        return getPage(games, page)
-    }
+    fun getGames(page: Int = 1): PageInfo<Game>
 
     /**
      * Get a list of games by tag.
@@ -146,11 +97,7 @@ class SteamSystem(
      * @throws NotFoundTag If the tag with the given ID does not exist.
      * @throws PageException If the page number is less than 1.
      */
-    fun getGamesByTag(tagId: String, page: Int = 1): PageInfo<Game> {
-        val tag = getTag(tagId)
-        val filterGames = games.filter { it.tags.contains(tag) }
-        return getPage(filterGames, page)
-    }
+    fun getGamesByTag(tagId: String, page: Int = 1): PageInfo<Game>
 
     /**
      * Get a list of games by developer.
@@ -161,11 +108,7 @@ class SteamSystem(
      * @throws NotFoundDeveloper If the developer with the given ID does not exist.
      * @throws PageException If the page number is less than 1.
      */
-    fun getGamesByDeveloper(developerId: String, page: Int = 1): PageInfo<Game> {
-        val developer = getDeveloper(developerId)
-        val filterGames = games.filter { it.developer == developer }
-        return getPage(filterGames, page)
-    }
+    fun getGamesByDeveloper(developerId: String, page: Int = 1): PageInfo<Game>
 
     /**
      * Search for games by name.
@@ -175,10 +118,7 @@ class SteamSystem(
      * @return A list of games.
      * @throws PageException If the page number is less than 1.
      */
-    fun searchGame(name: String, page: Int = 1): PageInfo<Game> {
-        val filterGames = games.filter { it.name.contains(name, true) }
-        return getPage(filterGames, page)
-    }
+    fun searchGame(name: String, page: Int = 1): PageInfo<Game>
 
     /**
      * Search for users by name.
@@ -188,10 +128,7 @@ class SteamSystem(
      * @return A list of users.
      * @throws PageException If the page number is less than 1.
      */
-    fun searchUser(name: String, page: Int = 1): PageInfo<User> {
-        val filterUsers = users.filter { it.name.contains(name, true) }
-        return getPage(filterUsers, page)
-    }
+    fun searchUser(name: String, page: Int = 1): PageInfo<User>
 
     /**
      * Add a review for a game.
@@ -203,14 +140,7 @@ class SteamSystem(
      * @throws NotFoundGame If the game with the given ID does not exist.
      * @throws ReviewException If the user does not own the game or if the user has already submitted a review for the game.
      */
-    fun addReview(userId: String, draftReview: DraftReview): Game {
-        val user = getUser(userId)
-        val game = getGame(draftReview.gameId)
-        if (!user.games.contains(game)) throw ReviewException("You need to own the game to leave a review")
-        game.reviews.find { it.user == user }?.let { throw  ReviewException("You've already submitted a review for this game") }
-        game.reviews.add(Review(idGenerator.nextReviewId(), user, game, draftReview.isRecommended, draftReview.text))
-        return game
-    }
+    fun addReview(userId: String, draftReview: DraftReview): Game
 
     /**
      * Purchase a game.
@@ -222,13 +152,7 @@ class SteamSystem(
      * @throws NotFoundGame If the game with the given ID does not exist.
      * @throws PurchaseException If the user already owns the game.
      */
-    fun purchaseGame(userId: String, draftPurchase: DraftPurchase): User {
-        val user = getUser(userId)
-        val game = getGame(draftPurchase.gameId)
-        if(user.games.contains(game)) throw PurchaseException("You already have the game")
-        user.games.add(game)
-        return user
-    }
+    fun purchaseGame(userId: String, draftPurchase: DraftPurchase): User
 
     /**
      * Add or remove a friend.
@@ -239,16 +163,146 @@ class SteamSystem(
      * @throws NotFoundUser If the user or the friend with the given ID does not exist.
      * @throws UserException If the user is trying to self-add.
      */
-    fun addOrRemoveFriend(userId: String, friendId: String): User {
-        if (userId == friendId) throw UserException("You cannot self-add.")
-        val user = getUser(userId)
-        val friend = getUser(friendId)
-        if (user.friends.remove(friend)) {
-            friend.friends.remove(user)
-        } else {
-            user.friends.add(friend)
-            friend.friends.add(user)
-        }
-        return user
-    }
+    fun addOrRemoveFriend(userId: String, friendId: String): User
+```
+
+## Model
+
+```kotlin
+class User(
+    val id: String,
+    val email: String,
+    val password: String,
+    val name: String,
+    val image: String,
+    val backgroundImage: String,
+    val games: MutableList<Game>,
+    val friends: MutableList<User>
+)
+```
+
+```kotlin
+class Game(
+    val id: String,
+    val name: String,
+    val description: String,
+    val mainImage: Image,
+    val multimedia: List<Image>,
+    val tags: List<Tag>,
+    val price: Price,
+    val requirement: Requirement,
+    val relatedGames: MutableList<Game>,
+    val developer: Developer,
+    val releaseDate: LocalDate,
+    val reviews: MutableList<Review>,
+    val esrb: ESRB,
+    val website: String
+)
+```
+
+```kotlin
+class Tag(
+    val id: String,
+    val name: String,
+    val image: Image
+)
+```
+
+```kotlin
+class Review(
+    val id: String,
+    val user: User,
+    val game: Game,
+    val isRecommended: Boolean,
+    val text: String
+)
+```
+
+```kotlin
+class Requirement(
+    os: List<String> = listOf(),
+    processor: List<String> = listOf(),
+    memory: Int = 0,
+    graphics: List<String> = listOf(),
+    directX: String = "",
+    storage: Int = 0
+)
+```
+
+```kotlin
+class Price(
+    val currency: String,
+    val amount: Double
+)
+```
+
+```kotlin
+class Image(
+    val src: String
+)
+```
+
+```kotlin
+enum class ESRB {
+    everyone,
+    everyone10plus,
+    teen,
+    mature17plus,
+    adultsOnly,
+    ratingPending
 }
+```
+
+```kotlin
+class Developer(
+    val id: String,
+    val name: String,
+    val image: Image
+)
+```
+
+## Pagination
+
+```kotlin
+class PageInfo<E>(
+    val currentPage: Int,
+    val list: List<E>,
+    val amountOfElements: Int,
+    val amountOfPages: Int
+)
+```
+
+## Drafts
+
+```kotlin
+class DraftReview(
+    val gameId: String,
+    val isRecommended: Boolean,
+    val text: String
+)
+```
+
+```kotlin
+class DraftPurchase(
+    val gameId: String,
+    val card: CardInfo,
+)
+```
+
+```kotlin
+class CardInfo(
+    val cardHolderName: String,
+    val number: Number,
+    val expirationDate: LocalDate,
+    val cvv: Number)
+```
+
+```kotlin
+class DraftUser(
+    val name: String,
+    val email: String,
+    val password: String,
+    val image: String,
+    val backgroundImage: String
+)
+```
